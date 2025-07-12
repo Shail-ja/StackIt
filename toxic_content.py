@@ -66,3 +66,9 @@ accuracy_score(y_test, model.predict(x_test))
 
 model.predict(vectorizer.transform([label_1['puncless_lower_text'].iloc[1000]]))
 
+import pickle
+filename = "toxic_content.pkl"
+with open(filename, 'wb') as file:
+    pickle.dump(model, file)
+
+print(f"Pickle file saved as {filename}")
