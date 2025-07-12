@@ -56,160 +56,143 @@ export default function RichTextEditor({
     execCommand('insertText', emoji);
   };
 
-  return (
-    <div className={`border border-gray-600 rounded-lg bg-gray-800 ${className}`}>
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-1 p-3 border-b border-gray-600 bg-gray-750">
+return (
+  <div className={`rounded-xl border border-gray-700 bg-gray-800 shadow-inner ${className}`}>
+    {/* Toolbar */}
+    <div className="flex flex-wrap items-center gap-2 p-3 border-b border-gray-700 bg-gray-750 rounded-t-xl">
+      {/* Formatting Buttons */}
+      {[
+        { icon: <Bold className="h-4 w-4" />, cmd: 'bold', title: 'Bold' },
+        { icon: <Italic className="h-4 w-4" />, cmd: 'italic', title: 'Italic' },
+        { icon: <Strikethrough className="h-4 w-4" />, cmd: 'strikeThrough', title: 'Strikethrough' },
+      ].map(({ icon, cmd, title }, i) => (
         <button
+          key={i}
           type="button"
-          onClick={() => execCommand('bold')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Bold"
+          onClick={() => execCommand(cmd)}
+          title={title}
+          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-white rounded transition duration-200"
         >
-          <Bold className="h-4 w-4" />
+          {icon}
         </button>
-        
-        <button
-          type="button"
-          onClick={() => execCommand('italic')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Italic"
-        >
-          <Italic className="h-4 w-4" />
-        </button>
-        
-        <button
-          type="button"
-          onClick={() => execCommand('strikeThrough')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Strikethrough"
-        >
-          <Strikethrough className="h-4 w-4" />
-        </button>
+      ))}
 
-        <div className="w-px h-6 bg-gray-600 mx-1"></div>
+      {/* Divider */}
+      <span className="w-px h-6 bg-gray-700 mx-1"></span>
 
+      {/* List Buttons */}
+      {[
+        { icon: <List className="h-4 w-4" />, cmd: 'insertUnorderedList', title: 'Bullet List' },
+        { icon: <ListOrdered className="h-4 w-4" />, cmd: 'insertOrderedList', title: 'Numbered List' },
+      ].map(({ icon, cmd, title }, i) => (
         <button
+          key={i}
           type="button"
-          onClick={() => execCommand('insertUnorderedList')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Bullet List"
+          onClick={() => execCommand(cmd)}
+          title={title}
+          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-white rounded transition duration-200"
         >
-          <List className="h-4 w-4" />
+          {icon}
         </button>
-        
-        <button
-          type="button"
-          onClick={() => execCommand('insertOrderedList')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Numbered List"
-        >
-          <ListOrdered className="h-4 w-4" />
-        </button>
+      ))}
 
-        <div className="w-px h-6 bg-gray-600 mx-1"></div>
+      <span className="w-px h-6 bg-gray-700 mx-1"></span>
 
+      {/* Alignment */}
+      {[
+        { icon: <AlignLeft className="h-4 w-4" />, cmd: 'justifyLeft', title: 'Align Left' },
+        { icon: <AlignCenter className="h-4 w-4" />, cmd: 'justifyCenter', title: 'Align Center' },
+        { icon: <AlignRight className="h-4 w-4" />, cmd: 'justifyRight', title: 'Align Right' },
+      ].map(({ icon, cmd, title }, i) => (
         <button
+          key={i}
           type="button"
-          onClick={() => execCommand('justifyLeft')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Align Left"
+          onClick={() => execCommand(cmd)}
+          title={title}
+          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-white rounded transition duration-200"
         >
-          <AlignLeft className="h-4 w-4" />
+          {icon}
         </button>
-        
-        <button
-          type="button"
-          onClick={() => execCommand('justifyCenter')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Align Center"
-        >
-          <AlignCenter className="h-4 w-4" />
-        </button>
-        
-        <button
-          type="button"
-          onClick={() => execCommand('justifyRight')}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Align Right"
-        >
-          <AlignRight className="h-4 w-4" />
-        </button>
+      ))}
 
-        <div className="w-px h-6 bg-gray-600 mx-1"></div>
+      <span className="w-px h-6 bg-gray-700 mx-1"></span>
 
+      {/* Insert Actions */}
+      {[
+        { icon: <Link className="h-4 w-4" />, onClick: insertLink, title: 'Insert Link' },
+        { icon: <Image className="h-4 w-4" />, onClick: insertImage, title: 'Insert Image' },
+      ].map(({ icon, onClick, title }, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={onClick}
+          title={title}
+          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-white rounded transition duration-200"
+        >
+          {icon}
+        </button>
+      ))}
+
+      {/* Emoji Picker */}
+      <div className="relative group">
         <button
           type="button"
-          onClick={insertLink}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Insert Link"
+          title="Insert Emoji"
+          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-white rounded transition duration-200"
         >
-          <Link className="h-4 w-4" />
+          <Smile className="h-4 w-4" />
         </button>
-        
-        <button
-          type="button"
-          onClick={insertImage}
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-          title="Insert Image"
-        >
-          <Image className="h-4 w-4" />
-        </button>
-
-        <div className="relative group">
-          <button
-            type="button"
-            className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded transition-colors duration-200"
-            title="Insert Emoji"
-          >
-            <Smile className="h-4 w-4" />
-          </button>
-          <div className="absolute top-full left-0 mt-1 bg-gray-700 rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-            <div className="flex space-x-1">
-              {['😀', '😂', '🤔', '👍', '❤️', '🔥'].map((emoji) => (
-                <button
-                  key={emoji}
-                  type="button"
-                  onClick={() => insertEmoji(emoji)}
-                  className="p-1 hover:bg-gray-600 rounded"
-                >
-                  {emoji}
-                </button>
-              ))}
-            </div>
+        <div className="absolute top-full left-0 mt-2 bg-gray-700 rounded-lg shadow-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
+          <div className="flex space-x-2">
+            {['😀', '😂', '🤔', '👍', '❤️', '🔥'].map((emoji) => (
+              <button
+                key={emoji}
+                type="button"
+                onClick={() => insertEmoji(emoji)}
+                className="p-1 text-xl hover:bg-gray-600 rounded transition-colors duration-200"
+              >
+                {emoji}
+              </button>
+            ))}
           </div>
         </div>
       </div>
-
-      {/* Editor */}
-      <div
-        ref={editorRef}
-        contentEditable
-        onInput={handleInput}
-        className="min-h-[200px] p-4 text-white focus:outline-none"
-        style={{ 
-          wordBreak: 'break-word',
-          whiteSpace: 'pre-wrap'
-        }}
-        data-placeholder={placeholder}
-        suppressContentEditableWarning={true}
-      />
-
-      <style>{`
-        [contenteditable]:empty:before {
-          content: attr(data-placeholder);
-          color: #9CA3AF;
-          pointer-events: none;
-        }
-        [contenteditable] img {
-          max-width: 100%;
-          height: auto;
-        }
-        [contenteditable] a {
-          color: #F97316;
-          text-decoration: underline;
-        }
-      `}</style>
     </div>
-  );
+
+    {/* Editor Content Area */}
+    <div
+      ref={editorRef}
+      contentEditable
+      onInput={handleInput}
+      className="min-h-[200px] p-4 text-white focus:outline-none prose prose-invert max-w-none"
+      style={{
+        wordBreak: 'break-word',
+        whiteSpace: 'pre-wrap',
+      }}
+      data-placeholder={placeholder}
+      suppressContentEditableWarning
+    />
+
+    {/* Inline Styles */}
+    <style>{`
+      [contenteditable]:empty:before {
+        content: attr(data-placeholder);
+        color: #9CA3AF;
+        pointer-events: none;
+        display: block;
+      }
+      [contenteditable] img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      [contenteditable] a {
+        color: #F97316;
+        text-decoration: underline;
+      }
+    `}</style>
+  </div>
+);
+
 }

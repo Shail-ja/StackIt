@@ -48,7 +48,7 @@ export default function QuestionCard({ question }: QuestionCardProps) {
         </div>
 
         {/* Question content */}
-        <div className="flex-1">
+        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:border-white hover:bg-gray-700 transition duration-200 cursor-pointer">
           <Link 
             to={`/questions/${question.id}`}
             className="text-orange-500 hover:text-orange-400 text-lg font-medium transition-colors duration-200"

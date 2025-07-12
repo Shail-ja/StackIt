@@ -39,102 +39,100 @@ export default function AskQuestionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Ask a Question</h1>
-          <p className="text-gray-400">
-            Get help from the community by asking a well-structured question
+  <div className="min-h-screen bg-gray-900 text-white">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      
+      {/* Header */}
+      <div className="mb-10">
+        <h1 className="text-3xl font-extrabold mb-2">Ask a Question</h1>
+        <p className="text-gray-400 text-sm">
+          Get help from the community by asking a well-structured question
+        </p>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-8">
+        
+        {/* Title */}
+        <div>
+          <label htmlFor="title" className="block text-lg font-semibold mb-1">Title</label>
+          <p className="text-gray-400 text-sm mb-2">
+            Be specific and imagine you're asking someone directly
           </p>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g., How to center a div in CSS?"
+            className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-700 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition"
+            required
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title */}
-          <div>
-            <label htmlFor="title" className="block text-lg font-medium text-white mb-2">
-              Title
-            </label>
-            <p className="text-gray-400 text-sm mb-3">
-              Be specific and imagine you're asking a question to another person
-            </p>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., How to center a div in CSS?"
-              className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-colors duration-200"
-              required
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-lg font-medium text-white mb-2">
-              Description
-            </label>
-            <p className="text-gray-400 text-sm mb-3">
-              Include all the information someone would need to answer your question
-            </p>
+        {/* Description */}
+        <div>
+          <label className="block text-lg font-semibold mb-1">Description</label>
+          <p className="text-gray-400 text-sm mb-2">
+            Include all the necessary context and code you’ve tried
+          </p>
+          <div className="rounded-lg border border-gray-700 bg-gray-800 p-2 focus-within:ring-2 focus-within:ring-orange-500">
             <RichTextEditor
               value={description}
               onChange={setDescription}
               placeholder="Describe your problem in detail..."
-              className="min-h-[300px]"
+              className="min-h-[300px] text-white"
             />
           </div>
-
-          {/* Tags */}
-          <div>
-            <label className="block text-lg font-medium text-white mb-2">
-              Tags
-            </label>
-            <p className="text-gray-400 text-sm mb-3">
-              Add up to 5 tags to describe what your question is about
-            </p>
-            <TagInput
-              tags={tags}
-              onTagsChange={setTags}
-              placeholder="e.g., JavaScript, React, CSS"
-            />
-            {tags.length >= 5 && (
-              <p className="text-yellow-500 text-sm mt-2">
-                Maximum 5 tags allowed
-              </p>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex items-center justify-between pt-6 border-t border-gray-700">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="px-6 py-2 text-gray-400 hover:text-white transition-colors duration-200"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting || !title.trim() || !description.trim() || tags.length === 0}
-              className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-400 disabled:cursor-not-allowed text-white px-8 py-2 rounded-lg font-medium transition-colors duration-200"
-            >
-              {isSubmitting ? 'Publishing...' : 'Publish Question'}
-            </button>
-          </div>
-        </form>
-
-        {/* Tips */}
-        <div className="mt-12 bg-gray-800 border border-gray-700 rounded-lg p-6">
-          <h3 className="text-white font-medium mb-4">Writing a good question</h3>
-          <ul className="text-gray-400 space-y-2 text-sm">
-            <li>• Summarize your problem in a one-line title</li>
-            <li>• Describe your problem in more detail</li>
-            <li>• Describe what you tried and what you expected to happen</li>
-            <li>• Add relevant tags to help others find your question</li>
-            <li>• Review your question before posting</li>
-          </ul>
         </div>
+
+        {/* Tags */}
+        <div>
+          <label className="block text-lg font-semibold mb-1">Tags</label>
+          <p className="text-gray-400 text-sm mb-2">
+            Add up to 5 tags (e.g., React, JavaScript, HTML)
+          </p>
+          <TagInput
+            tags={tags}
+            onTagsChange={setTags}
+            placeholder="e.g., JavaScript, React, CSS"
+          />
+          {tags.length >= 5 && (
+            <p className="text-yellow-500 text-sm mt-2">Maximum 5 tags allowed</p>
+          )}
+        </div>
+
+        {/* Buttons */}
+        <div className="flex items-center justify-between border-t border-gray-700 pt-6">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="text-gray-400 hover:text-white transition duration-200 text-sm font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isSubmitting || !title.trim() || !description.trim() || tags.length === 0}
+            className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-400 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition duration-200"
+          >
+            {isSubmitting ? 'Publishing...' : 'Publish Question'}
+          </button>
+        </div>
+      </form>
+
+      {/* Tips Section */}
+      <div className="mt-12 bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-md">
+        <h3 className="text-lg font-semibold mb-4">📝 Writing a Good Question</h3>
+        <ul className="text-gray-400 space-y-2 text-sm list-disc pl-5">
+          <li>Summarize your problem in a one-line title</li>
+          <li>Describe your issue in detail with code or examples</li>
+          <li>Explain what you’ve already tried</li>
+          <li>Use relevant tags to categorize your question</li>
+          <li>Proofread before submitting</li>
+        </ul>
       </div>
     </div>
-  );
+  </div>
+);
 }

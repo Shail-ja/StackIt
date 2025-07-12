@@ -42,52 +42,57 @@ export default function TagInput({ tags, onTagsChange, placeholder = "Add tags..
       !tags.includes(suggestion)
   );
 
-  return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-800 border border-gray-600 rounded-lg focus-within:border-orange-500">
-        {tags.map((tag, index) => (
-          <span
-            key={index}
-            className="inline-flex items-center space-x-1 bg-orange-500 text-white px-2 py-1 rounded text-sm"
+return (
+  <div className="space-y-2">
+    {/* Tag Box */}
+    <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-800 border border-gray-700 rounded-lg focus-within:ring-1 focus-within:ring-orange-500 transition-all duration-200">
+      {tags.map((tag, index) => (
+        <span
+          key={index}
+          className="inline-flex items-center space-x-1 bg-orange-500 text-white px-2 py-1 rounded-full text-sm shadow-sm"
+        >
+          <span>{tag}</span>
+          <button
+            type="button"
+            onClick={() => removeTag(index)}
+            className="hover:bg-orange-600 rounded-full p-0.5 transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-white"
+            aria-label={`Remove tag ${tag}`}
           >
-            <span>{tag}</span>
-            <button
-              type="button"
-              onClick={() => removeTag(index)}
-              className="hover:bg-orange-600 rounded-full p-0.5 transition-colors duration-200"
-            >
-              <X className="h-3 w-3" />
-            </button>
-          </span>
-        ))}
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={addTag}
-          placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] bg-transparent text-white placeholder-gray-400 outline-none"
-        />
-      </div>
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      ))}
 
-      {inputValue && filteredSuggestions.length > 0 && (
-        <div className="bg-gray-800 border border-gray-600 rounded-lg max-h-32 overflow-y-auto">
-          {filteredSuggestions.slice(0, 5).map((suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              onClick={() => {
-                onTagsChange([...tags, suggestion]);
-                setInputValue('');
-              }}
-              className="w-full text-left px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-      )}
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={addTag}
+        placeholder={tags.length === 0 ? placeholder : ''}
+        className="flex-1 min-w-[120px] bg-transparent text-white placeholder-gray-400 outline-none focus:outline-none"
+      />
     </div>
-  );
+
+    {/* Suggestions Dropdown */}
+    {inputValue && filteredSuggestions.length > 0 && (
+      <div className="bg-gray-800 border border-gray-700 rounded-lg max-h-40 overflow-y-auto shadow-lg">
+        {filteredSuggestions.slice(0, 5).map((suggestion) => (
+          <button
+            key={suggestion}
+            type="button"
+            onClick={() => {
+              onTagsChange([...tags, suggestion]);
+              setInputValue('');
+            }}
+            className="w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 text-sm"
+          >
+            {suggestion}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
 }
