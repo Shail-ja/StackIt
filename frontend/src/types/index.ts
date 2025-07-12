@@ -18,7 +18,7 @@ export interface Question {
 }
 
 export interface Answer {
-  id: string;
+  _id: string;
   content: string;
   author: User;
   createdAt: Date;

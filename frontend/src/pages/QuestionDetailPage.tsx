@@ -1,19 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ChevronUp, ChevronDown, Check, Eye, Calendar } from 'lucide-react';
 import { mockQuestions } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import RichTextEditor from '../components/Editor/RichTextEditor';
+import API from '../api';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
+  const [question, setQuestion] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [newAnswer, setNewAnswer] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const question = mockQuestions.find(q => q.id === id);
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      try {
+        const res = await API.get(`/questions/${id}`);
+        setQuestion(res.data);
+      } catch (err) {
+        console.error('Failed to fetch question:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchQuestion();
+  }, [id]);
 
-  if (!question) {
+  const handleSubmitAnswer = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!newAnswer.trim() || !isAuthenticated || !id) return;
+
+  setIsSubmitting(true);
+
+  try {
+    await API.post(`/answers/${id}`, { content: newAnswer }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    setNewAnswer('');
+    
+    // Refetch updated question data after posting
+    const res = await API.get(`/questions/${id}`);
+    setQuestion(res.data);
+  } catch (err) {
+    console.error('Failed to post answer:', err);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+
+  const formatDate = (date: string | Date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+   if (loading) {
+    return <div className="text-center text-white py-10">Loading question...</div>;
+  }
+
+   if (!question) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -24,26 +79,6 @@ export default function QuestionDetailPage() {
     );
   }
 
-  const handleSubmitAnswer = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newAnswer.trim() || !isAuthenticated) return;
-
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setNewAnswer('');
-    setIsSubmitting(false);
-  };
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
 return (
   <div className="min-h-screen bg-gray-900 text-white">
@@ -86,7 +121,7 @@ return (
 
             <div className="flex items-center justify-between mt-6">
               <div className="flex flex-wrap gap-2">
-                {question.tags.map((tag) => (
+                {question.tags?.map((tag) => (
                   <span
                     key={tag}
                     className="bg-gray-700 text-gray-300 px-3 py-1 rounded text-sm hover:bg-gray-600 transition"
@@ -98,12 +133,12 @@ return (
 
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <img
-                  src={question.author.avatar}
-                  alt={question.author.username}
+                  src={question.author?.avatar || `https://api.dicebear.com/6.x/initials/svg?seed=${question.author?.username}`}
+                  alt={question.author?.username}
                   className="h-8 w-8 rounded-full object-cover"
                 />
                 <div>
-                  <p className="text-white">{question.author.username}</p>
+                  <p className="text-white">{question.author?.username}</p>
                   <p>asked {formatDate(question.createdAt)}</p>
                 </div>
               </div>
@@ -118,8 +153,8 @@ return (
           {question.answers.length} Answer{question.answers.length !== 1 ? 's' : ''}
         </h2>
 
-        {question.answers.map((answer) => (
-          <div key={answer.id} className="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-sm">
+        {question.answers?.map((answer) => (
+          <div key={answer._id} className="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-sm">
             <div className="flex gap-6">
               
               {/* Vote & Accept */}
