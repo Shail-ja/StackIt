@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import SignupModal from "./SignUpModal";
@@ -10,10 +11,12 @@ interface LoginModalProps {
 export default function LoginModal({ onClose }: LoginModalProps) {
   const [email, setEmail] = useState('');
   const [showSignup, setShowSignup] = useState(false);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
-
+  const { login, logout, user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+ 
   if (showSignup) {
     return <SignupModal onClose={() => setShowSignup(false)} />;
   }
@@ -24,13 +27,19 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     
     try {
       await login(email, password);
-      onClose();
+      navigate('/');
     } catch (error) {
       console.error('Login failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+  if (isAuthenticated) {
+    console.log("Logged in as", user?.username);
+  }
+  }, [isAuthenticated]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -86,7 +95,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
         <p style={{ textAlign: "center", marginTop: "1rem" }}>
            Don’t have an account?{" "}
           <span
-            onClick={() => setShowSignup(true)}
+            onClick={() => navigate('/register')}
             className="text-orange-600 underline cursor-pointer">
             Sign up here
           </span>

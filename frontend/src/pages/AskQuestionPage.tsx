@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import RichTextEditor from '../components/Editor/RichTextEditor';
 import TagInput from '../components/Tags/TagInput';
+import API from '../api';
 
 export default function AskQuestionPage() {
   const [title, setTitle] = useState('');
@@ -20,11 +21,23 @@ export default function AskQuestionPage() {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Navigate to home after successful submission
-    navigate('/');
+     try {
+    await API.post('/questions', {
+      title,
+      description,
+      tags
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to post question', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!user) {

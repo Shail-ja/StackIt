@@ -1,15 +1,36 @@
-import React, { useState } from 'react';
-import { mockQuestions } from '../data/mockData';
-import { FilterType } from '../types';
+import React, { useState, useEffect } from 'react';
+import API from '../api';
+import { Question, FilterType } from '../types';
 import QuestionCard from '../components/Questions/QuestionCard';
 import QuestionFilters from '../components/Questions/QuestionFilters';
 
 export default function HomePage() {
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [activeFilter, setActiveFilter] = useState<FilterType>('newest');
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await API.get('/questions');
+        console.log('Fetched questions:', res.data);
+        setQuestions(res.data);
+      } catch (err) {
+        console.error('Failed to fetch questions', err);
+      }
+    };
+    fetchQuestions();
+  }, []);
+
   const getFilteredQuestions = () => {
-    let filtered = [...mockQuestions];
+    let filtered = [...questions];
+
+    filtered = filtered.map(q => ({
+      ...q,
+      createdAt: new Date(q.createdAt),
+      answers: (q.answers || []).map(a => ({ ...a, createdAt: new Date(a.createdAt) }))
+    }));
+
 
     // Apply text search
     if (searchTerm) {
@@ -75,7 +96,7 @@ export default function HomePage() {
           <div className="space-y-4">
             {filteredQuestions.length > 0 ? (
               filteredQuestions.map((question) => (
-                <QuestionCard key={question.id} question={question} />
+                <QuestionCard key={question._id} question={question} />
               ))
             ) : (
               <div className="text-center py-12">

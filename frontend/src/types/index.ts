@@ -6,7 +6,7 @@ export interface User {
 }
 
 export interface Question {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   tags: string[];

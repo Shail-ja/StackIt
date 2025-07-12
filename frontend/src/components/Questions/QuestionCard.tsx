@@ -50,7 +50,7 @@ export default function QuestionCard({ question }: QuestionCardProps) {
         {/* Question content */}
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:border-white hover:bg-gray-700 transition duration-200 cursor-pointer">
           <Link 
-            to={`/questions/${question.id}`}
+            to={`/questions/${question._id}`}
             className="text-orange-500 hover:text-orange-400 text-lg font-medium transition-colors duration-200"
           >
             {question.title}
@@ -59,13 +59,13 @@ export default function QuestionCard({ question }: QuestionCardProps) {
           <div 
             className="text-gray-300 mt-2 line-clamp-3"
             dangerouslySetInnerHTML={{ 
-              __html: question.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...' 
+              __html: (question.description || '').replace(/<[^>]*>/g, '').substring(0, 200) + '...' 
             }}
           />
 
           <div className="flex items-center justify-between mt-4">
             <div className="flex flex-wrap gap-2">
-              {question.tags.map((tag) => (
+              {question.tags?.map((tag) => (
                 <span
                   key={tag}
                   className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-sm hover:bg-gray-600 transition-colors duration-200"
@@ -82,11 +82,11 @@ export default function QuestionCard({ question }: QuestionCardProps) {
               </div>
               <div className="flex items-center space-x-2">
                 <img 
-                  src={question.author.avatar} 
-                  alt={question.author.username}
+                  src={question.author?.avatar} 
+                  alt={question.author?.username || 'Avatar'}
                   className="h-6 w-6 rounded-full object-cover"
                 />
-                <span>{question.author.username}</span>
+                <span>{question.author?.username}</span>
                 <span>asked {formatDate(question.createdAt)}</span>
               </div>
             </div>

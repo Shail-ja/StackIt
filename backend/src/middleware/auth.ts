@@ -35,9 +35,11 @@
 //   }
 // };
 // middleware/auth.ts
+
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload as DefaultJwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv';
+
 
 dotenv.config();
 
@@ -61,19 +63,21 @@ declare global {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
 
+  const authHeader = req.headers.authorization;
+  
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'No token provided' });
   }
-
+  
   const token = authHeader.split(' ')[1]?.trim();
-
+  
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
     req.user = decoded;
     next();
   } catch (err) {
+    console.error('JWT verification error:', err);
     console.error('JWT verification error:', err);
     return res.status(401).json({ error: 'Invalid token' });
   }
